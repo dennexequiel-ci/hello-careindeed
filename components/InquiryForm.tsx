@@ -1,5 +1,6 @@
 "use client";
 
+import useInquiryResultStore from '@/app/useInquiryResultStore';
 import { inquiryFormSchema } from '@/schemas/inquiryFormSchema';
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
@@ -7,6 +8,8 @@ import { useState } from 'react';
 
 const InquiryForm = () => {
     const router = useRouter();
+
+    const setInquiryResult = useInquiryResultStore((state) => state.setInquiryResult);
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -64,6 +67,28 @@ const InquiryForm = () => {
             console.log(validationResult.error.flatten().fieldErrors);
             setErrors(validationResult.error.flatten().fieldErrors);
             return;
+        }
+
+        try {
+            const response = await fetch('/api/inquire', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit form');
+            }
+
+            const data = await response.json();
+
+            // Store the inquiry result in state
+            setInquiryResult(data);
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            // Todo: Show an error message to the user
         }
     };
 
