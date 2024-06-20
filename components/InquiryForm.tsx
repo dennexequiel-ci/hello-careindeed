@@ -86,6 +86,9 @@ const InquiryForm = () => {
 
             // Store the inquiry result in state
             setInquiryResult(data);
+
+            // Redirect to the results page
+            router.push('/results')
         } catch (error) {
             console.error('Error submitting form:', error);
             // Todo: Show an error message to the user
