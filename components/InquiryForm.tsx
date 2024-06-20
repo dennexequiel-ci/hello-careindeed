@@ -65,7 +65,6 @@ const InquiryForm = () => {
         })
 
         if (!validationResult.success) {
-            console.log(validationResult.error.flatten().fieldErrors);
             setErrors(validationResult.error.flatten().fieldErrors);
             return;
         }
