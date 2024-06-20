@@ -4,6 +4,7 @@ import useInquiryResultStore from '@/app/useInquiryResultStore';
 import { inquiryFormSchema } from '@/schemas/inquiryFormSchema';
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
+import { Loading } from 'notiflix';
 import { useState } from 'react';
 
 const InquiryForm = () => {
@@ -69,6 +70,12 @@ const InquiryForm = () => {
             return;
         }
 
+        Loading.dots('Processing your inquiry. Please wait...', {
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            svgColor: '#ffffff',
+            messageMaxLength: 100,
+        });
+
         try {
             const response = await fetch('/api/inquire', {
                 method: 'POST',
@@ -92,6 +99,8 @@ const InquiryForm = () => {
         } catch (error) {
             console.error('Error submitting form:', error);
             // Todo: Show an error message to the user
+        } finally {
+            Loading.remove();
         }
     };
 
